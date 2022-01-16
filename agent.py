@@ -61,22 +61,20 @@ class Agent:
         df = stocks.get_stock_into(stock)
         ema_50 = ta.ema(df["Close"], length=50).loc[date]
         ema_200 = ta.ema(df["Close"], length=50).loc[date]
-        macd_df = pd.DataFrame(ta.macd(df["Close"], fast=12, slow=26, signal=9)).loc[
-            date
-        ]
+        macd_df = pd.DataFrame(ta.macd(df["Close"], fast=12, slow=26, signal=9)).loc[date]
         macd = macd_df["MACD_12_26_9"]
         macd_s = macd_df["MACDs_12_26_9"]
         macd_h = macd_df["MACDh_12_26_9"]
         rsi = ta.rsi(df["Close"], length=14).loc[date]
 
         return (
-            ema_50 * self.ema_50_w
-            + ema_200 * self.ema_200_w
-            + macd * self.macd_w
-            + macd_s * self.macd_s_w
-            + macd_h * self.macd_h_w
-            + rsi * self.rsi_w
-        )
+                ema_50 * self.ema_50_w
+                + ema_200 * self.ema_200_w
+                + macd * self.macd_w
+                + macd_s * self.macd_s_w
+                + macd_h * self.macd_h_w
+                + rsi * self.rsi_w
+                )
 
     def buy(self, symbol: str):
         price = stocks.get_latest_price(symbol)
@@ -90,7 +88,7 @@ class Agent:
     def sell(self, symbol: str):
         if symbol not in self.stocks:
             return
-        price = stocks.get_latest_price(symbol)
+      price = stocks.get_latest_price(symbol)
 
         self.buying_power += price
         self.stocks.remove(symbol)
@@ -133,8 +131,8 @@ def mutate(agent: Agent) -> Agent:
     # Mutate a random attribute slightly
     attributes = agent.get_attr()
     attributes[np.random.randint(0, len(attributes))] += (
-        2 * np.random.rand() - 1
-    ) * 0.1
+            2 * np.random.rand() - 1
+            ) * 0.1
     agent.set_attr(attributes)
 
     return agent
@@ -160,10 +158,11 @@ def loop(genration_num, prev_agents) -> list[Agent]:
         for agent in agents:
             agent.tick(pd.to_datetime("today"))
 
-    def get_score(a: Agent):
-        return a.calculate_composite_score()
+    # def get_score(a: Agent):
+    #    return a.calculate_composite_score()
 
-    agents.sort(reverse=True, key=get_score)
+    # Sort by highest score
+    # agents.sort(reverse=True, key=get_score())
 
     # The best agent is carried over to the next generation
     next_agents = []
